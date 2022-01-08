@@ -25,17 +25,16 @@ export class TasksService {
   }
 
   getFilteredTasks(query: GetTasksFilterDto): Task[] {
-    const result = this.getAllTasks();
+    let result = this.getAllTasks();
     if (query.search) {
-      result.filter(
+      result = result.filter(
         (task) =>
           task.title.includes(query.search) ||
           task.description.includes(query.search),
       );
-      console.log(result);
     }
     if (query.status) {
-      result.filter((task) => task.status == query.status);
+      result = result.filter((task) => task.status == query.status);
     }
     return result;
   }
@@ -50,5 +49,20 @@ export class TasksService {
     };
     this.tasks.push(task);
     return task;
+  }
+
+  updateTask(id: string, status: TaskStatus): Task {
+    const task = this.tasks.find((task) => task.id == id);
+    task.status = status;
+    return task;
+  }
+
+  deleteTask(id: string): string {
+    const task = this.tasks.find((task) => task.id == id);
+    if (task) {
+      this.tasks.splice(this.tasks.indexOf(task));
+      return 'Success';
+    }
+    return 'Fail';
   }
 }
